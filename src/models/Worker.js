@@ -2,27 +2,75 @@ const mongoose = require('mongoose');
 
 const workerSchema = new mongoose.Schema({
   // Personal Information
-  fullName: { type: String, required: true },
-  phone: { type: String, required: true, unique: true },
-  address: { type: String, required: true },
-  aadhaar: { type: String, required: true },
-  pan: { type: String, required: true },
+  fullName: {
+    type: String,
+    required: [true, 'Full name is required'],
+    minlength: [3, 'Full name must be at least 3 characters'],
+    match: [/^[a-zA-Z\s]+$/, 'Full name can only contain alphabets and spaces']
+  },
+  phone: {
+    type: String,
+    required: [true, 'Phone number is required'],
+    unique: true
+  },
+  location: {
+    address: { type: String, required: [true, 'Address is required'] },
+    lat: { type: Number, required: true },
+    lng: { type: Number, required: true }
+  },
+  aadhaar: {
+    type: String,
+    required: [true, 'Aadhaar number is required'],
+    unique: true,
+    match: [/^\d{12}$/, 'Aadhaar must be exactly 12 digits']
+  },
+  pan: {
+    type: String,
+    required: [true, 'PAN card number is required'],
+    unique: true,
+    uppercase: true,
+    match: [/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, 'Invalid PAN card format']
+  },
 
   // Professional Details
-  category: { type: String, required: true },
+  category: { type: String, required: [true, 'Category is required'] },
   skills: [{ type: String }],
-  experience: { type: String, required: true },
-  summary: { type: String, required: true },
+  experience: {
+    type: Number,
+    required: [true, 'Experience is required'],
+    min: 0,
+    max: 50
+  },
+  summary: {
+    type: String,
+    required: [true, 'Professional summary is required'],
+    minlength: [50, 'Summary must be at least 50 characters'] // Though user asked for 50 words, we'll validate words in controller/frontend
+  },
 
   // Banking Details
-  accountHolderName: { type: String, required: true },
-  bankName: { type: String, required: true },
-  accountNumber: { type: String, required: true },
-  ifsc: { type: String, required: true },
-  upi: { type: String },
+  bankDetails: {
+    holderName: { type: String, required: true },
+    bankName: { type: String, required: true },
+    accountNumber: {
+      type: String,
+      required: true,
+      minlength: [9, 'Account number must be at least 9 digits']
+    },
+    ifsc: {
+      type: String,
+      required: true,
+      uppercase: true,
+      match: [/^[A-Z]{4}0[A-Z0-9]{6}$/, 'Invalid IFSC code format']
+    },
+    upi: { type: String }
+  },
 
   // Status & Metadata
-  isVerified: { type: Boolean, default: false },
+  status: {
+    type: String,
+    enum: ['UNDER_REVIEW', 'ACTIVE', 'INACTIVE'],
+    default: 'UNDER_REVIEW'
+  },
   isOnline: { type: Boolean, default: false },
   rating: { type: Number, default: 0 },
   completedOrders: { type: Number, default: 0 },
