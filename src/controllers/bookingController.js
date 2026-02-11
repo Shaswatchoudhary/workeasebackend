@@ -96,7 +96,26 @@ const getBookingById = async (req, res, next) => {
   }
 };
 
+/**
+ * Get all bookings
+ * @route GET /api/booking
+ */
+const getBookings = async (req, res, next) => {
+  try {
+    const bookings = await Booking.find().populate('workerId').sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: bookings.length,
+      data: bookings,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createBooking,
   getBookingById,
+  getBookings,
 };
