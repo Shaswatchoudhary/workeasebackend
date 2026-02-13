@@ -14,9 +14,17 @@ const workerSchema = new mongoose.Schema({
     unique: true
   },
   location: {
-    address: { type: String, required: [true, 'Address is required'] },
-    lat: { type: Number, required: true },
-    lng: { type: Number, required: true }
+    type: {
+      type: String,
+      enum: ['Point'],
+      required: true,
+      default: 'Point'
+    },
+    coordinates: {
+      type: [Number], // [lng, lat]
+      required: true
+    },
+    address: { type: String, required: [true, 'Address is required'] }
   },
   aadhaar: {
     type: String,
@@ -82,5 +90,7 @@ const workerSchema = new mongoose.Schema({
 
   createdAt: { type: Date, default: Date.now }
 });
+
+workerSchema.index({ location: '2dsphere' });
 
 module.exports = mongoose.model('Worker', workerSchema);

@@ -134,7 +134,11 @@ const registerWorker = async (req, res, next) => {
     const worker = await Worker.create({
       fullName,
       phone,
-      location: { address, lat, lng },
+      location: {
+        type: 'Point',
+        coordinates: [parseFloat(lng), parseFloat(lat)],
+        address
+      },
       aadhaar,
       pan: pan.toUpperCase(),
       category,
@@ -214,8 +218,8 @@ const getWorkersByCategory = async (req, res, next) => {
       const distance = calculateDistance(
         userLat,
         userLng,
-        worker.location?.lat || 0,
-        worker.location?.lng || 0
+        worker.location?.coordinates[1] || 0,
+        worker.location?.coordinates[0] || 0
       );
       return { ...worker, distanceInKm: distance };
     });
