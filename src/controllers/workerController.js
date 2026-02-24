@@ -110,6 +110,7 @@ const registerWorker = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Account holder name must match full name exactly' });
     }
     if (!bankDetails.accountNumber || bankDetails.accountNumber.length < 9) {
+      //not working properly
       return res.status(400).json({ success: false, message: 'Invalid bank account number' });
     }
     if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(bankDetails.ifsc.toUpperCase())) {
@@ -205,8 +206,8 @@ const getWorkersByCategory = async (req, res, next) => {
       throw new Error('Please provide category, lat, and lng');
     }
 
-    const userLat = parseFloat(lat);
-    const userLng = parseFloat(lng);
+    const userLat = parseFloat(lat); //using parseFloat to convert string to number 
+    const userLng = parseFloat(lng); 
 
     const workers = await Worker.find({
       category,

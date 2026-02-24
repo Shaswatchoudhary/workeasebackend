@@ -83,7 +83,7 @@ exports.verifyOtp = async (req, res) => {
         phone: user.phone,
         name: user.name,
         email: user.email,
-        profileImage: user.profileImage
+        profileImage: user.profileImage //yet to define 
       },
       isNewUser
     });
