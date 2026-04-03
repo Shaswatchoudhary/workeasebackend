@@ -34,6 +34,7 @@ const workers = [
     rating: 4.8,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2465, 16.7085], address: 'Shahupuri, Kolhapur' }
   },
   {
@@ -53,6 +54,7 @@ const workers = [
     rating: 4.5,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2398, 16.7012], address: 'Rajarampuri, Kolhapur' }
   },
   {
@@ -72,6 +74,7 @@ const workers = [
     rating: 5.0,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2480, 16.7120], address: 'Tarabai Park, Kolhapur' }
   },
   {
@@ -91,6 +94,7 @@ const workers = [
     rating: 4.2,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2410, 16.6980], address: 'Uchgaon, Kolhapur' }
   },
   {
@@ -110,6 +114,7 @@ const workers = [
     rating: 4.6,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2510, 16.7040], address: 'Kadamwadi, Kolhapur' }
   },
 
@@ -131,6 +136,7 @@ const workers = [
     rating: 4.4,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2450, 16.7065], address: 'Laxmipuri, Kolhapur' }
   },
   {
@@ -150,6 +156,7 @@ const workers = [
     rating: 4.7,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2380, 16.7025], address: 'Phulewadi, Kolhapur' }
   },
   {
@@ -169,6 +176,7 @@ const workers = [
     rating: 4.1,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2425, 16.7110], address: 'Nagala Park, Kolhapur' }
   },
   {
@@ -188,6 +196,7 @@ const workers = [
     rating: 4.5,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2485, 16.6995], address: 'Kasaba Bawada, Kolhapur' }
   },
   {
@@ -207,6 +216,7 @@ const workers = [
     rating: 3.9,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2520, 16.7075], address: 'Salokhe Nagar, Kolhapur' }
   },
 
@@ -228,6 +238,7 @@ const workers = [
     rating: 4.9,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2440, 16.7055], address: 'Shivaji Peth, Kolhapur' }
   },
   {
@@ -247,6 +258,7 @@ const workers = [
     rating: 4.6,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2490, 16.7095], address: 'Ruikar Colony, Kolhapur' }
   },
   {
@@ -266,6 +278,7 @@ const workers = [
     rating: 4.3,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2415, 16.7015], address: 'Samrat Nagar, Kolhapur' }
   },
   {
@@ -285,6 +298,7 @@ const workers = [
     rating: 4.7,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2455, 16.7130], address: 'Kawala Naka, Kolhapur' }
   },
   {
@@ -304,6 +318,7 @@ const workers = [
     rating: 3.8,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2375, 16.6975], address: 'Rankala, Kolhapur' }
   },
 
@@ -325,6 +340,7 @@ const workers = [
     rating: 4.7,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2435, 16.7045], address: 'Mangalwar Peth, Kolhapur' }
   },
   {
@@ -344,6 +360,7 @@ const workers = [
     rating: 4.4,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2410, 16.7080], address: 'Yallamma Colony, Kolhapur' }
   },
   {
@@ -363,6 +380,7 @@ const workers = [
     rating: 4.5,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2475, 16.7020], address: 'Race Course, Kolhapur' }
   },
   {
@@ -382,6 +400,7 @@ const workers = [
     rating: 4.8,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2445, 16.7115], address: 'Bindu Chowk, Kolhapur' }
   },
   {
@@ -401,6 +420,7 @@ const workers = [
     rating: 4.1,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2405, 16.6990], address: 'Subhashnagar, Kolhapur' }
   },
 
@@ -422,6 +442,7 @@ const workers = [
     rating: 4.9,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2438, 16.7052], address: 'Malwadi, Kolhapur' }
   },
   {
@@ -441,6 +462,7 @@ const workers = [
     rating: 4.7,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2395, 16.7090], address: 'Pratibha Nagar, Kolhapur' }
   },
   {
@@ -460,6 +482,7 @@ const workers = [
     rating: 4.4,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2460, 16.7018], address: 'Maruti Chowk, Kolhapur' }
   },
   {
@@ -479,6 +502,7 @@ const workers = [
     rating: 4.5,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2472, 16.7112], address: 'Rajendra Nagar, Kolhapur' }
   },
   {
@@ -498,6 +522,7 @@ const workers = [
     rating: 4.2,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2422, 16.6985], address: 'Sane Guruji, Kolhapur' }
   },
 
@@ -519,6 +544,7 @@ const workers = [
     rating: 4.8,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2442, 16.7058], address: 'Shahu Colony, Kolhapur' }
   },
   {
@@ -538,6 +564,7 @@ const workers = [
     rating: 4.6,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2400, 16.7100], address: 'Udyam Nagar, Kolhapur' }
   },
   {
@@ -557,6 +584,7 @@ const workers = [
     rating: 4.9,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2478, 16.7022], address: 'Timber Market, Kolhapur' }
   },
   {
@@ -576,6 +604,7 @@ const workers = [
     rating: 4.3,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2450, 16.7125], address: 'Sykes Extension, Kolhapur' }
   },
   {
@@ -595,6 +624,7 @@ const workers = [
     rating: 3.8,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2388, 16.6998], address: 'Kavala Naka, Kolhapur' }
   },
 
@@ -616,6 +646,7 @@ const workers = [
     rating: 4.7,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2428, 16.7042], address: 'Shivaji Peth, Kolhapur' }
   },
   {
@@ -635,6 +666,7 @@ const workers = [
     rating: 4.5,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2488, 16.7088], address: 'Bagal Chowk, Kolhapur' }
   },
   {
@@ -654,6 +686,7 @@ const workers = [
     rating: 4.2,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2405, 16.7010], address: 'Mirajkar Ticktik, Kolhapur' }
   },
   {
@@ -673,6 +706,7 @@ const workers = [
     rating: 4.6,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2430, 16.7118], address: 'Shivaji Peth, Kolhapur' }
   },
   {
@@ -692,6 +726,7 @@ const workers = [
     rating: 3.9,
     status: 'ACTIVE',
     isOnline: true,
+    basePrice: 399,
     location: { type: 'Point', coordinates: [74.2495, 16.6990], address: 'Salokhe Nagar, Kolhapur' }
   }
 ];

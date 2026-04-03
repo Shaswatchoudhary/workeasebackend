@@ -93,3 +93,46 @@ exports.verifyOtp = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server Error' });
   }
 };
+
+// New Firebase Login Sync
+exports.firebaseLogin = async (req, res) => {
+  try {
+    const { phone, uid } = req.body;
+
+    if (!phone) {
+      return res.status(400).json({ success: false, message: 'Phone is required' });
+    }
+
+    // Find or create user in MongoDB based on Firebase confirmed phone number
+    let user = await User.findOne({ phone });
+    let isNewUser = false;
+
+    if (!user) {
+      user = await User.create({ 
+        phone,
+        firebaseUid: uid // Optionally store the Firebase UID for cross-reference
+      });
+      isNewUser = true;
+    }
+
+    console.log(`[Backend] Firebase User Synced: ${phone} (UID: ${uid})`);
+
+    res.status(200).json({
+      success: true,
+      message: 'User Synced Successfully',
+      user: {
+        _id: user._id,
+        phone: user.phone,
+        name: user.name,
+        email: user.email,
+        profileImage: user.profileImage
+      },
+      isNewUser
+    });
+
+  } catch (error) {
+    console.error('Firebase Login Error:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+

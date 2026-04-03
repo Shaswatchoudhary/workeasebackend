@@ -54,6 +54,11 @@ const workerSchema = new mongoose.Schema({
     required: [true, 'Professional summary is required'],
     minlength: [50, 'Summary must be at least 50 characters'] // Though user asked for 50 words, we'll validate words in controller/frontend
   },
+  basePrice: {
+    type: Number,
+    required: [true, 'Base price is required'],
+    default: 299
+  },
 
   // Banking Details
   bankDetails: {
