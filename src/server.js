@@ -8,6 +8,7 @@ const { errorHandler, notFound } = require('./utils/errorHandler');
 const workerRoutes = require('./routes/workerRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 // Initialize Express app
 const app = express();
@@ -41,6 +42,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/workers', workerRoutes);
 app.use('/api/booking', bookingRoutes);
+app.use('/api/users', userRoutes);
 
 // Error handling
 app.use(notFound);
