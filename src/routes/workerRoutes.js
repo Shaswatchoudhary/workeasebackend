@@ -7,7 +7,8 @@ const {
   sendOtp,
   verifyOtp,
   registerWorker,
-  getDashboard
+  getDashboard,
+  updateProfile
 } = require('../controllers/workerController');
 
 // Define specific routes BEFORE parameterized routes
