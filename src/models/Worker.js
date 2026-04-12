@@ -51,8 +51,7 @@ const workerSchema = new mongoose.Schema({
   },
   summary: {
     type: String,
-    required: [true, 'Professional summary is required'],
-    minlength: [50, 'Summary must be at least 50 characters'] // Though user asked for 50 words, we'll validate words in controller/frontend
+    required: false
   },
   basePrice: {
     type: Number,

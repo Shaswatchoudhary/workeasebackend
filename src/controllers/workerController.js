@@ -101,10 +101,10 @@ const registerWorker = async (req, res, next) => {
     if (experience === undefined || experience < 0 || experience > 50) {
       return res.status(400).json({ success: false, message: 'Invalid years of experience (0-50)' });
     }
-    // Word count for summary (min 50 words)
+    // Word count for summary (optional)
     const wordCount = summary ? summary.trim().split(/\s+/).length : 0;
-    if (wordCount < 50) {
-      return res.status(400).json({ success: false, message: 'Professional summary must be at least 50 words' });
+    if (summary && wordCount < 10 && wordCount > 0) {
+      return res.status(400).json({ success: false, message: 'If provided, the summary should be at least 10 words for a professional profile' });
     }
     if (!bankDetails || bankDetails.holderName !== fullName) {
       return res.status(400).json({ success: false, message: 'Account holder name must match full name exactly' });
