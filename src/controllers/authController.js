@@ -110,12 +110,15 @@ exports.firebaseLogin = async (req, res) => {
     if (!user) {
       user = await User.create({ 
         phone,
-        firebaseUid: uid // Optionally store the Firebase UID for cross-reference
+        firebaseUid: uid 
       });
       isNewUser = true;
     }
 
-    console.log(`[Backend] Firebase User Synced: ${phone} (UID: ${uid})`);
+    // Check if a Worker profile also exists
+    const worker = await Worker.findOne({ phone });
+
+    console.log(`[Backend] Firebase User Synced: ${phone} (UID: ${uid}) - Worker Found: ${!!worker}`);
 
     res.status(200).json({
       success: true,
@@ -127,7 +130,9 @@ exports.firebaseLogin = async (req, res) => {
         email: user.email,
         profileImage: user.profileImage
       },
-      isNewUser
+      worker: worker || null,
+      isNewUser,
+      isWorker: !!worker
     });
 
   } catch (error) {
