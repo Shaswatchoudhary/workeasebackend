@@ -43,6 +43,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/workers', workerRoutes);
 app.use('/api/booking', bookingRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/admin', require('./routes/adminRoutes'));
 
 // Error handling
 app.use(notFound);
