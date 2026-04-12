@@ -114,8 +114,64 @@ const getBookings = async (req, res, next) => {
   }
 };
 
+/**
+ * Update booking status
+ * @route PATCH /api/booking/:bookingId/status
+ */
+const updateBookingStatus = async (req, res, next) => {
+  try {
+    const { bookingId } = req.params;
+    const { status } = req.body;
+
+    if (!['accepted', 'completed', 'cancelled'].includes(status)) {
+      return res.status(400).json({ success: false, message: 'Invalid status' });
+    }
+
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res.status(404).json({ success: false, message: 'Booking not found' });
+    }
+
+    const oldStatus = booking.status;
+    booking.status = status;
+    await booking.save();
+
+    // Logic to update worker stats if completed
+    if (status === 'completed' && oldStatus !== 'completed') {
+      const worker = await Worker.findById(booking.workerId);
+      if (worker) {
+        // Increment global counters
+        worker.completedOrders += 1;
+        worker.totalEarnings = (worker.totalEarnings || 0) + booking.totalPrice;
+        
+        // Update periodic earnings
+        worker.earningsToday += booking.totalPrice;
+        worker.earningsWeek += booking.totalPrice;
+        worker.earningsMonth += booking.totalPrice;
+        
+        // Worker becomes available again
+        worker.isAvailable = true;
+        
+        await worker.save();
+      }
+    } else if (status === 'cancelled' && oldStatus !== 'cancelled') {
+        // Make worker available again if job was accepted then cancelled
+        await Worker.findByIdAndUpdate(booking.workerId, { isAvailable: true });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Booking ${status} successfully`,
+      data: booking,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createBooking,
   getBookingById,
   getBookings,
+  updateBookingStatus
 };

@@ -179,6 +179,36 @@ const getDashboard = async (req, res, next) => {
   }
 };
 
+// @desc    Update worker profile
+// @route   PATCH /api/worker/profile/:workerId
+const updateProfile = async (req, res, next) => {
+  try {
+    const { workerId } = req.params;
+    const updateData = req.body;
+
+    // Remove sensitive/restricted fields from manual update
+    const restrictedFields = ['phone', 'aadhaar', 'pan', 'status', 'rating', 'completedOrders', 'totalEarnings', 'earningsToday', 'earningsWeek', 'earningsMonth'];
+    restrictedFields.forEach(field => delete updateData[field]);
+
+    const worker = await Worker.findByIdAndUpdate(workerId, updateData, {
+      new: true,
+      runValidators: true
+    });
+
+    if (!worker) {
+      return res.status(404).json({ success: false, message: 'Worker not found' });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Profile updated successfully',
+      data: worker
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getCategories = (req, res) => {
   const categories = [
     'AC Repair',
@@ -266,5 +296,6 @@ module.exports = {
   getDashboard,
   getWorkersByCategory,
   getMostBookedWorkers,
-  getCategories
+  getCategories,
+  updateProfile
 };

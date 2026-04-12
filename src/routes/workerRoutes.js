@@ -19,6 +19,7 @@ router.post('/send-otp', sendOtp);
 router.post('/verify-otp', verifyOtp);
 router.post('/register', registerWorker);
 router.get('/dashboard/:workerId', getDashboard);
+router.patch('/profile/:workerId', updateProfile);
 
 // User-side queries
 router.get('/', getWorkersByCategory);

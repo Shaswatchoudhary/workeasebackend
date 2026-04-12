@@ -90,6 +90,7 @@ const workerSchema = new mongoose.Schema({
   earningsToday: { type: Number, default: 0 },
   earningsWeek: { type: Number, default: 0 },
   earningsMonth: { type: Number, default: 0 },
+  totalEarnings: { type: Number, default: 0 },
   pendingEarnings: { type: Number, default: 0 },
   hoursOnline: { type: Number, default: 0 },
 
