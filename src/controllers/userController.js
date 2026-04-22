@@ -70,3 +70,38 @@ exports.getProfile = async (req, res) => {
     });
   }
 };
+
+/**
+ * Create a new issue report
+ * @route POST /api/users/report
+ */
+exports.createReport = async (req, res) => {
+  try {
+    const Report = require('../models/Report');
+    const { bookingId, userId, workerId, userName, workerName, subject, description, priority, category } = req.body;
+
+    const report = await Report.create({
+      bookingId,
+      userId,
+      workerId,
+      userName,
+      workerName,
+      subject: subject || 'Booking Issue',
+      description,
+      priority: priority || 'medium',
+      category: category || 'General'
+    });
+
+    res.status(201).json({
+      success: true,
+      data: report
+    });
+  } catch (error) {
+    console.error('[UserController] Create report error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error creating report',
+      error: error.message
+    });
+  }
+};

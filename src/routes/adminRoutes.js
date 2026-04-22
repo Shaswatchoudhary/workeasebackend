@@ -8,5 +8,6 @@ router.get('/workers', adminController.getAllWorkers);
 router.patch('/workers/:id/status', adminController.updateWorkerStatus);
 router.get('/users', adminController.getAllUsers);
 router.get('/bookings', adminController.getAllBookings);
+router.get('/reports', adminController.getAllReports);
 
 module.exports = router;

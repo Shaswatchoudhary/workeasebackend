@@ -104,3 +104,20 @@ exports.getAllBookings = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Get all reports (System Issues)
+// @route   GET /api/admin/reports
+exports.getAllReports = async (req, res, next) => {
+  try {
+    const Report = require('../models/Report');
+    const reports = await Report.find().sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: reports.length,
+      data: reports
+    });
+  } catch (error) {
+    next(error);
+  }
+};
