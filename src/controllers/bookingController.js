@@ -114,6 +114,8 @@ const getBookings = async (req, res, next) => {
   }
 };
 
+const { notifyUser, notifyWorker } = require('../../notificationHelper');
+
 /**
  * Update booking status
  * @route PATCH /api/booking/:bookingId/status
@@ -123,7 +125,7 @@ const updateBookingStatus = async (req, res, next) => {
     const { bookingId } = req.params;
     const { status } = req.body;
 
-    if (!['accepted', 'completed', 'cancelled'].includes(status)) {
+    if (!['accepted', 'work_completed', 'completed', 'cancelled'].includes(status)) {
       return res.status(400).json({ success: false, message: 'Invalid status' });
     }
 
@@ -136,24 +138,39 @@ const updateBookingStatus = async (req, res, next) => {
     booking.status = status;
     await booking.save();
 
-    // Logic to update worker stats if completed
-    if (status === 'completed' && oldStatus !== 'completed') {
+    // ━━━━━━━━━━━━━━━━━━━━━
+    // NOTIFICATION TRIGGERS
+    // ━━━━━━━━━━━━━━━━━━━━━
+    if (status === 'accepted' && oldStatus !== 'accepted') {
+      await notifyUser(booking.userId,
+        'Booking Confirmed',
+        'Your professional is on the way to your location!',
+        { bookingId: booking._id.toString(), type: 'booking_accepted' }
+      );
+    } else if (status === 'work_completed' && oldStatus !== 'work_completed') {
+      await notifyUser(booking.userId,
+        'Work Completed',
+        'Please confirm to close the job and rate the service.',
+        { bookingId: booking._id.toString(), type: 'work_completed' }
+      );
+    } else if (status === 'completed' && oldStatus !== 'completed') {
+      // Logic to update worker stats if completed
       const worker = await Worker.findById(booking.workerId);
       if (worker) {
-        // Increment global counters
         worker.completedOrders += 1;
         worker.totalEarnings = (worker.totalEarnings || 0) + booking.totalPrice;
-        
-        // Update periodic earnings
         worker.earningsToday += booking.totalPrice;
         worker.earningsWeek += booking.totalPrice;
         worker.earningsMonth += booking.totalPrice;
-        
-        // Worker becomes available again
         worker.isAvailable = true;
-        
         await worker.save();
       }
+
+      await notifyWorker(booking.workerId,
+        'Job Closed',
+        'The customer has confirmed the job is complete.',
+        { bookingId: booking._id.toString(), type: 'job_closed' }
+      );
     } else if (status === 'cancelled' && oldStatus !== 'cancelled') {
         // Make worker available again if job was accepted then cancelled
         await Worker.findByIdAndUpdate(booking.workerId, { isAvailable: true });

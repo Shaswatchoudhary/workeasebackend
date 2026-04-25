@@ -38,7 +38,7 @@ const bookingSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: {
-        values: ['booked', 'accepted', 'completed', 'cancelled'],
+        values: ['booked', 'accepted', 'work_completed', 'completed', 'cancelled'],
         message: '{VALUE} is not a valid status',
       },
       default: 'booked',
