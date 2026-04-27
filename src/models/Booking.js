@@ -12,8 +12,7 @@ const bookingSchema = new mongoose.Schema(
       ref: 'User'
     },
     workerName: {
-      type: String,
-      required: [true, 'Please provide worker name'],
+      type: String
     },
     category: {
       type: String,
@@ -24,12 +23,10 @@ const bookingSchema = new mongoose.Schema(
       required: [true, 'Please provide service type'],
     },
     pricePerHour: {
-      type: Number,
-      required: [true, 'Please provide price per hour'],
+      type: Number
     },
     distanceKm: {
-      type: Number,
-      required: [true, 'Please provide distance'],
+      type: Number
     },
     bookingTime: {
       type: Date,
@@ -48,8 +45,7 @@ const bookingSchema = new mongoose.Schema(
       required: [true, 'Please provide address'],
     },
     totalPrice: {
-      type: Number,
-      required: [true, 'Please provide total price'],
+      type: Number
     },
     priceSummary: {
       type: mongoose.Schema.Types.Mixed,

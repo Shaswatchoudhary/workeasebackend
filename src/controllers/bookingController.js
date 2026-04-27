@@ -77,20 +77,20 @@ const createBooking = async (req, res, next) => {
       worker.location?.lng || 0
     );
 
-    const totalPrice = worker.pricePerHour || 249; 
+    const totalPrice = worker.basePrice || 249; 
 
     const booking = await Booking.create({
       workerId: worker._id,
       userId: userDoc._id,
-      workerName: worker.name,
-      category: category || 'Service',
-      serviceType: serviceType || 'Professional',
-      pricePerHour: worker.pricePerHour || 249,
+      workerName: worker.fullName || worker.name,
+      category: category || worker.category || 'Service',
+      serviceType: serviceType || worker.serviceType || 'Professional',
+      pricePerHour: worker.basePrice || 249,
       distanceKm,
       address: finalAddress,
       totalPrice,
       priceSummary: {
-        base: worker.pricePerHour,
+        base: worker.basePrice || 249,
         distanceFee: 0,
         total: totalPrice
       },
