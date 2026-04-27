@@ -28,7 +28,7 @@ exports.getStats = async (req, res, next) => {
 // @route   GET /api/admin/workers
 exports.getAllWorkers = async (req, res, next) => {
   try {
-    const workers = await Worker.find().sort({ createdAt: -1 });
+    const workers = await Worker.find().sort({ createdAt: -1 }).lean();
 
     res.status(200).json({
       success: true,

@@ -93,6 +93,16 @@ const workerSchema = new mongoose.Schema({
   pendingEarnings: { type: Number, default: 0 },
   hoursOnline: { type: Number, default: 0 },
 
+  // Media & Documents
+  photo: { type: String },
+  profilePhoto: { type: String },
+  documents: {
+    aadhaarFront: { type: String },
+    aadhaarBack: { type: String },
+    pan: { type: String },
+    bankDoc: { type: String }
+  },
+
   createdAt: { type: Date, default: Date.now }
 });
 
