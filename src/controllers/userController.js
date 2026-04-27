@@ -7,7 +7,7 @@ const User = require('../models/User');
  */
 exports.updateProfile = async (req, res) => {
   try {
-    const { userId, name, email, profileImage, firebaseUid } = req.body;
+    const { userId, name, email, profileImage } = req.body;
 
     if (!userId) {
       return res.status(400).json({
@@ -18,7 +18,7 @@ exports.updateProfile = async (req, res) => {
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { name, email, profileImage, firebaseUid },
+      { name, email, profileImage },
       { new: true, runValidators: true }
     );
 
