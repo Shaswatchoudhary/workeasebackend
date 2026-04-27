@@ -1,6 +1,6 @@
 const User = require('../models/User');
 const admin = require('../config/firebase');
-const db = admin.firestore();
+const db = admin ? admin.firestore() : null;
 
 // @desc    Get counts and overview statistics
 // @route   GET /api/admin/stats
@@ -62,39 +62,43 @@ exports.updateWorkerStatus = async (req, res, next) => {
     }
 
     // --- FIRESTORE SYNC ---
-    try {
-      const firestoreData = {
-        status: worker.status,
-        isVerified: worker.status === 'ACTIVE',
-        isActive: worker.status === 'ACTIVE',
-        serviceType: worker.category,
-        category: worker.category,
-        updatedAt: admin.firestore.FieldValue.serverTimestamp()
-      };
+    if (db) {
+      try {
+        const firestoreData = {
+          status: worker.status,
+          isVerified: worker.status === 'ACTIVE',
+          isActive: worker.status === 'ACTIVE',
+          serviceType: worker.category,
+          category: worker.category,
+          updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        };
 
-      if (worker.firebaseUid) {
-        await db.collection('workers').doc(worker.firebaseUid).set(firestoreData, { merge: true });
-        console.log(`[AdminSync] Firestore synced by UID for ${worker.fullName}`);
-      } else if (worker.phone) {
-        // Fallback: search by phone (normalized)
-        const normalizedPhone = worker.phone.replace(/\D/g, '').slice(-10);
-        const snap = await db.collection('workers').where('phone', '==', normalizedPhone).limit(1).get();
-        if (!snap.empty) {
-          await snap.docs[0].ref.set(firestoreData, { merge: true });
-          console.log(`[AdminSync] Firestore synced by phone for ${worker.fullName}`);
-        } else {
-          // Try full phone string just in case
-          const snap2 = await db.collection('workers').where('phone', '==', worker.phone).limit(1).get();
-          if (!snap2.empty) {
-            await snap2.docs[0].ref.set(firestoreData, { merge: true });
-            console.log(`[AdminSync] Firestore synced by full phone for ${worker.fullName}`);
+        if (worker.firebaseUid) {
+          await db.collection('workers').doc(worker.firebaseUid).set(firestoreData, { merge: true });
+          console.log(`[AdminSync] Firestore synced by UID for ${worker.fullName}`);
+        } else if (worker.phone) {
+          // Fallback: search by phone (normalized)
+          const normalizedPhone = worker.phone.replace(/\D/g, '').slice(-10);
+          const snap = await db.collection('workers').where('phone', '==', normalizedPhone).limit(1).get();
+          if (!snap.empty) {
+            await snap.docs[0].ref.set(firestoreData, { merge: true });
+            console.log(`[AdminSync] Firestore synced by phone for ${worker.fullName}`);
           } else {
-             console.log(`[AdminSync] No Firestore record found for ${worker.fullName} (Phone: ${normalizedPhone})`);
+            // Try full phone string just in case
+            const snap2 = await db.collection('workers').where('phone', '==', worker.phone).limit(1).get();
+            if (!snap2.empty) {
+              await snap2.docs[0].ref.set(firestoreData, { merge: true });
+              console.log(`[AdminSync] Firestore synced by full phone for ${worker.fullName}`);
+            } else {
+               console.log(`[AdminSync] No Firestore record found for ${worker.fullName} (Phone: ${normalizedPhone})`);
+            }
           }
         }
+      } catch (fsError) {
+        console.error('[AdminSync] Firestore sync failed:', fsError.message);
       }
-    } catch (fsError) {
-      console.error('[AdminSync] Firestore sync failed:', fsError.message);
+    } else {
+      console.warn('[AdminSync] Firestore sync skipped: Firebase Admin not initialized');
     }
 
     res.status(200).json({
