@@ -78,7 +78,9 @@ const registerWorker = async (req, res, next) => {
       skills,
       experience,
       summary,
-      bankDetails
+      bankDetails,
+      documents,
+      firebaseUid
     } = req.body;
 
     // 1. Strict Server-side Validation
@@ -147,6 +149,8 @@ const registerWorker = async (req, res, next) => {
       experience,
       summary,
       bankDetails,
+      documents,
+      firebaseUid,
       status: 'UNDER_REVIEW'
     });
 

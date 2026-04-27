@@ -102,6 +102,7 @@ const workerSchema = new mongoose.Schema({
     pan: { type: String },
     bankDoc: { type: String }
   },
+  firebaseUid: { type: String },
 
   createdAt: { type: Date, default: Date.now }
 });
