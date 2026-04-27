@@ -1,5 +1,6 @@
 const Booking = require('../models/Booking');
 const Worker = require('../models/Worker');
+const User = require('../models/User');
 const { calculateDistance } = require('../utils/distanceCalculator');
 
 /**
@@ -8,41 +9,76 @@ const { calculateDistance } = require('../utils/distanceCalculator');
  */
 const createBooking = async (req, res, next) => {
   try {
+    console.log('[DEBUG] createBooking req.body:', JSON.stringify(req.body, null, 2));
     const {
       workerId,
       category,
       serviceType,
       address,
       userLat,
-      userLng
+      userLng,
+      userId
     } = req.body;
 
     // Validation
-    if (!workerId || !category || !serviceType || !address || !userLat || !userLng) {
-      res.status(400);
-      throw new Error('Missing required fields: workerId, category, serviceType, address, userLat, userLng');
+    const requiredFields = ['workerId', 'category', 'serviceType', 'address', 'userLat', 'userLng', 'userId'];
+    const missingFields = requiredFields.filter(field => req.body[field] === undefined || req.body[field] === null || req.body[field] === '');
+    
+    if (missingFields.length > 0) {
+      console.log('[DEBUG] Missing fields:', missingFields);
+      return res.status(400).json({
+        success: false,
+        message: `Missing required fields: ${missingFields.join(', ')}`
+      });
     }
 
-    const worker = await Worker.findById(workerId);
+    // Find Worker (handle both MongoDB ID and Firebase UID)
+    let worker;
+    try {
+      if (workerId.length === 24) {
+        worker = await Worker.findById(workerId);
+      }
+      if (!worker) {
+        worker = await Worker.findOne({ firebaseUid: workerId });
+      }
+    } catch (err) {
+      worker = await Worker.findOne({ firebaseUid: workerId });
+    }
+
     if (!worker) {
-      res.status(404);
-      throw new Error('Worker not found');
+      return res.status(404).json({ success: false, message: 'Worker not found' });
+    }
+
+    // Find User (handle both MongoDB ID and Firebase UID)
+    let userDoc;
+    try {
+      if (userId.length === 24) {
+        userDoc = await User.findById(userId);
+      }
+      if (!userDoc) {
+        userDoc = await User.findOne({ firebaseUid: userId });
+      }
+    } catch (err) {
+      userDoc = await User.findOne({ firebaseUid: userId });
+    }
+
+    if (!userDoc) {
+      return res.status(404).json({ success: false, message: 'User not found. Please ensure your profile is synced.' });
     }
 
     // Calculate distance
     const distanceKm = calculateDistance(
       parseFloat(userLat),
       parseFloat(userLng),
-      worker.location.lat,
-      worker.location.lng
+      worker.location?.lat || 0,
+      worker.location?.lng || 0
     );
 
-    // Calculate price (simplified logic: base price + distance fee example)
-    // In real app, this might come from frontend or complex logic
-    const totalPrice = worker.pricePerHour; // Keeping it simple per requirements ("pricePerHour")
+    const totalPrice = worker.pricePerHour || 249; 
 
     const booking = await Booking.create({
       workerId: worker._id,
+      userId: userDoc._id,
       workerName: worker.name,
       category,
       serviceType,

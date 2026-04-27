@@ -40,11 +40,22 @@ const sendNotification = async (fcmToken, title, body, data = {}) => {
 const notifyUser = async (userId, title, body, data = {}) => {
   try {
     const db = admin.firestore();
-    const userDoc = await db.collection('users').doc(userId).get();
+    let firebaseUid = userId;
+
+    // If userId looks like a MongoDB ObjectId (24 chars hex), look it up
+    if (typeof userId === 'string' && userId.length === 24) {
+      const User = require('./src/models/User');
+      const user = await User.findById(userId);
+      if (user && user.firebaseUid) {
+        firebaseUid = user.firebaseUid;
+      }
+    }
+
+    const userDoc = await db.collection('users').doc(firebaseUid).get();
     if (userDoc.exists && userDoc.data().fcmToken) {
       await sendNotification(userDoc.data().fcmToken, title, body, data);
     } else {
-      console.log(`User ${userId} not found or has no FCM token in Firestore`);
+      console.log(`User ${firebaseUid} not found or has no FCM token in Firestore`);
     }
   } catch (error) {
     console.error('Error in notifyUser:', error);
@@ -54,11 +65,22 @@ const notifyUser = async (userId, title, body, data = {}) => {
 const notifyWorker = async (workerId, title, body, data = {}) => {
   try {
     const db = admin.firestore();
-    const workerDoc = await db.collection('workers').doc(workerId).get();
+    let firebaseUid = workerId;
+
+    // If workerId looks like a MongoDB ObjectId, look it up
+    if (typeof workerId === 'string' && workerId.length === 24) {
+      const Worker = require('./src/models/Worker');
+      const worker = await Worker.findById(workerId);
+      if (worker && worker.firebaseUid) {
+        firebaseUid = worker.firebaseUid;
+      }
+    }
+
+    const workerDoc = await db.collection('workers').doc(firebaseUid).get();
     if (workerDoc.exists && workerDoc.data().fcmToken) {
       await sendNotification(workerDoc.data().fcmToken, title, body, data);
     } else {
-      console.log(`Worker ${workerId} not found or has no FCM token in Firestore`);
+      console.log(`Worker ${firebaseUid} not found or has no FCM token in Firestore`);
     }
   } catch (error) {
     console.error('Error in notifyWorker:', error);
