@@ -1,3 +1,4 @@
+const Worker = require('../models/Worker');
 const User = require('../models/User');
 const admin = require('../config/firebase');
 const db = admin ? admin.firestore() : null;
