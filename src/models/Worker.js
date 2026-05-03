@@ -80,7 +80,7 @@ const workerSchema = new mongoose.Schema({
   // Status & Metadata
   status: {
     type: String,
-    enum: ['UNDER_REVIEW', 'ACTIVE', 'INACTIVE'],
+    enum: ['UNDER_REVIEW', 'ACTIVE', 'INACTIVE', 'REJECTED'],
     default: 'UNDER_REVIEW'
   },
   isOnline: { type: Boolean, default: false },
