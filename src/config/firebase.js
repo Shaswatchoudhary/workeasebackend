@@ -3,37 +3,39 @@ let admin = null;
 try {
   let serviceAccount = null;
 
-  // 1. Check if the secret is provided as an Environment Variable (for Render/Production)
-  // Note: Render env var keys can have dots, but process.env['key'] is safer
+  // 1. Check if the secret is provided as an Environment Variable
   const envSecret = process.env['serviceAccountKey.json'] || process.env.FIREBASE_SERVICE_ACCOUNT;
   
   if (envSecret) {
     try {
       serviceAccount = JSON.parse(envSecret);
-      console.log('[Firebase] Using service account from Environment Variable');
     } catch (e) {
-      console.error('[Firebase] Failed to parse service account Environment Variable:', e.message);
+      console.error('[Firebase] Failed to parse Environment Variable:', e.message);
     }
   }
 
-  // 2. If no env var, fall back to the local file (for Local Development)
+  // 2. If no env var, fall back to local file
   if (!serviceAccount) {
     try {
       serviceAccount = require('../../serviceAccountKey.json');
-      console.log('[Firebase] Using service account from local file');
-    } catch (e) {
-      // File not found is expected on production
-    }
+    } catch (e) {}
   }
 
-  if (serviceAccount) {
-    admin = require('firebase-admin');
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount)
-    });
-    console.log('[Firebase] Admin SDK Initialized successfully');
+  if (serviceAccount || (require('firebase-admin').apps.length > 0)) {
+    const adminSDK = require('firebase-admin');
+    
+    // CRITICAL FIX: Check if an app already exists before initializing
+    if (!adminSDK.apps.length) {
+      admin = adminSDK.initializeApp({
+        credential: adminSDK.credential.cert(serviceAccount)
+      });
+      console.log('[Firebase] Admin SDK Initialized NEW instance');
+    } else {
+      admin = adminSDK.app();
+      console.log('[Firebase] Admin SDK Reusing EXISTING instance');
+    }
   } else {
-    console.warn('[Firebase] Admin SDK Initialization skipped: No service account found (env or file)');
+    console.warn('[Firebase] Admin SDK Initialization skipped: No credentials found');
   }
 } catch (error) {
   console.error('[Firebase] Critical Initialization Error:', error.message);
