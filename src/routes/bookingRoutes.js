@@ -8,6 +8,9 @@ router.post('/', createBooking);
 // GET /api/booking
 router.get('/', getBookings);
 
+// GET /api/booking/:bookingId
+router.get('/:bookingId', getBookingById);
+
 // PATCH /api/booking/:bookingId/status
 router.patch('/:bookingId/status', updateBookingStatus);
 

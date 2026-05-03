@@ -112,16 +112,23 @@ exports.updateWorkerStatus = async (req, res, next) => {
   }
 };
 
-// @desc    Get all registered users
+// @desc    Get all registered users with booking counts
 // @route   GET /api/admin/users
 exports.getAllUsers = async (req, res, next) => {
   try {
-    const users = await User.find().sort({ createdAt: -1 });
+    const Booking = require('../models/Booking');
+    const users = await User.find().sort({ createdAt: -1 }).lean();
+
+    // Attach real booking counts to each user
+    const usersWithCounts = await Promise.all(users.map(async (user) => {
+      const bookingCount = await Booking.countDocuments({ userId: user._id });
+      return { ...user, bookingCount };
+    }));
 
     res.status(200).json({
       success: true,
-      count: users.length,
-      data: users
+      count: usersWithCounts.length,
+      data: usersWithCounts
     });
   } catch (error) {
     next(error);
@@ -212,6 +219,30 @@ exports.updateReportStatus = async (req, res, next) => {
       success: true,
       message: 'Issue updated successfully',
       data: report
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+// @desc    Get single booking details
+// @route   GET /api/admin/bookings/:id
+exports.getBookingById = async (req, res, next) => {
+  try {
+    const Booking = require('../models/Booking');
+    const booking = await Booking.findById(req.params.id)
+      .populate('workerId', 'fullName phone profileImage category')
+      .populate('userId', 'name phone profileImage');
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: 'Booking not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: booking
     });
   } catch (error) {
     next(error);

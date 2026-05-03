@@ -11,6 +11,7 @@ router.get('/bookings', adminController.getAllBookings);
 router.get('/reports', adminController.getAllReports);
 
 router.get('/workers/:id', adminController.getWorkerById);
+router.get('/bookings/:id', adminController.getBookingById);
 router.patch('/reports/:id', adminController.updateReportStatus);
 
 module.exports = router;
