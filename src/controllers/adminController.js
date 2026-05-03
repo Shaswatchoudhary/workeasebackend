@@ -47,7 +47,7 @@ exports.getAllWorkers = async (req, res, next) => {
 exports.updateWorkerStatus = async (req, res, next) => {
   try {
     const { status } = req.body;
-    
+
     if (!['ACTIVE', 'REJECTED', 'UNDER_REVIEW', 'INACTIVE'].includes(status)) {
       return res.status(400).json({ success: false, message: 'Invalid status' });
     }
@@ -91,7 +91,7 @@ exports.updateWorkerStatus = async (req, res, next) => {
               await snap2.docs[0].ref.set(firestoreData, { merge: true });
               console.log(`[AdminSync] Firestore synced by full phone for ${worker.fullName}`);
             } else {
-               console.log(`[AdminSync] No Firestore record found for ${worker.fullName} (Phone: ${normalizedPhone})`);
+              console.log(`[AdminSync] No Firestore record found for ${worker.fullName} (Phone: ${normalizedPhone})`);
             }
           }
         }
@@ -201,7 +201,7 @@ exports.updateReportStatus = async (req, res, next) => {
 
     const report = await Report.findByIdAndUpdate(
       req.params.id,
-      { 
+      {
         status: status || 'resolved',
         updatedAt: Date.now()
       },
@@ -275,6 +275,29 @@ exports.updateSettings = async (req, res, next) => {
     settings.updatedAt = Date.now();
     await settings.save();
     res.status(200).json({ success: true, data: settings });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// --- PROFILE MANAGEMENT ---
+exports.getAdminProfile = async (req, res, next) => {
+  try {
+    // Return the dynamic profile data from the authenticated user
+    const user = req.user || {};
+    
+    const profile = {
+      fullName: user.name || "Administrator",
+      role: "System Operations",
+      email: user.email || "admin@workease.com",
+      status: "Verified Admin",
+      verified: true,
+      avatar: user.picture || null,
+      lastLogin: new Date().toISOString(),
+      location: "Central Headquarters",
+      professionalSummary: `Primary administrator for the WorkEase platform. Logged in via ${user.email || 'corporate account'}. Responsible for system integrity and operational oversight.`
+    };
+    res.status(200).json({ success: true, data: profile });
   } catch (error) {
     next(error);
   }

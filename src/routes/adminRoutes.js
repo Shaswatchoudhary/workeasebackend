@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
+const auth = require('../middleware/auth');
 
 // All routes under /api/admin
 router.get('/stats', adminController.getStats);
@@ -17,5 +18,8 @@ router.patch('/reports/:id', adminController.updateReportStatus);
 // Settings
 router.get('/settings', adminController.getSettings);
 router.patch('/settings', adminController.updateSettings);
+
+// Profile
+router.get('/profile', auth, adminController.getAdminProfile);
 
 module.exports = router;
