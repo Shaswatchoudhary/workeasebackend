@@ -44,6 +44,7 @@ const createBooking = async (req, res, next) => {
 
     const booking = await Booking.create({
       workerId: worker._id,
+      userId: req.body.userId || req.user?._id || null,
       workerName: worker.name,
       category,
       serviceType,

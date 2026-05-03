@@ -10,4 +10,7 @@ router.get('/users', adminController.getAllUsers);
 router.get('/bookings', adminController.getAllBookings);
 router.get('/reports', adminController.getAllReports);
 
+router.get('/workers/:id', adminController.getWorkerById);
+router.patch('/reports/:id', adminController.updateReportStatus);
+
 module.exports = router;
