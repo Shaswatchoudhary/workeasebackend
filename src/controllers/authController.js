@@ -113,6 +113,10 @@ exports.firebaseLogin = async (req, res) => {
         firebaseUid: uid 
       });
       isNewUser = true;
+    } else {
+      // Update existing user with their Firebase UID to enable notifications
+      user.firebaseUid = uid;
+      await user.save();
     }
 
     // Check if a Worker profile also exists

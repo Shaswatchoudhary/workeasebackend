@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
   profileImage: {
     type: String,
     default: 'https://cdn-icons-png.flaticon.com/512/149/149071.png'
+  },
+  firebaseUid: {
+    type: String,
+    sparse: true
   }
 }, {
   timestamps: true
