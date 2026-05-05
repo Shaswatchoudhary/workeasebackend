@@ -302,6 +302,8 @@ exports.getAdminProfile = async (req, res, next) => {
     next(error);
   }
 };
+const adminLib = require('firebase-admin');
+
 // @desc    Send broadcast notification to all workers/users
 // @route   POST /api/admin/broadcast
 exports.sendBroadcast = async (req, res, next) => {
@@ -331,7 +333,7 @@ exports.sendBroadcast = async (req, res, next) => {
           message,
           type: 'broadcast',
           isRead: false,
-          createdAt: admin.firestore.FieldValue.serverTimestamp()
+          createdAt: adminLib.firestore.FieldValue.serverTimestamp()
         });
         userCount++;
       });
@@ -355,7 +357,7 @@ exports.sendBroadcast = async (req, res, next) => {
           message,
           type: 'broadcast',
           isRead: false,
-          createdAt: admin.firestore.FieldValue.serverTimestamp()
+          createdAt: adminLib.firestore.FieldValue.serverTimestamp()
         });
         workerCount++;
       });
