@@ -314,22 +314,52 @@ exports.sendBroadcast = async (req, res, next) => {
 
     let tokens = [];
 
-    // 1. Fetch tokens from Firestore 'users'
+    // 1. Fetch tokens and save to Firestore 'users'
     if (target === 'all' || target === 'users') {
       const usersSnapshot = await db.collection('users').get();
+      const batch = db.batch();
+      let userCount = 0;
+
       usersSnapshot.forEach(doc => {
         const data = doc.data();
         if (data.fcmToken) tokens.push(data.fcmToken);
+        
+        // Save to User's notification history (triggers red dot)
+        const notifRef = db.collection('users').doc(doc.id).collection('notifications').doc();
+        batch.set(notifRef, {
+          title,
+          message,
+          type: 'broadcast',
+          isRead: false,
+          createdAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+        userCount++;
       });
+      if (userCount > 0) await batch.commit();
     }
 
-    // 2. Fetch tokens from Firestore 'workers'
+    // 2. Fetch tokens and save to Firestore 'workers'
     if (target === 'all' || target === 'workers') {
       const workersSnapshot = await db.collection('workers').get();
+      const batch = db.batch();
+      let workerCount = 0;
+
       workersSnapshot.forEach(doc => {
         const data = doc.data();
         if (data.fcmToken) tokens.push(data.fcmToken);
+        
+        // Save to Worker's notification history (triggers red dot)
+        const notifRef = db.collection('workers').doc(doc.id).collection('notifications').doc();
+        batch.set(notifRef, {
+          title,
+          message,
+          type: 'broadcast',
+          isRead: false,
+          createdAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+        workerCount++;
       });
+      if (workerCount > 0) await batch.commit();
     }
 
     // 3. Cleanup tokens (unique & valid)
