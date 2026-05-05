@@ -14,6 +14,7 @@ router.get('/reports', adminController.getAllReports);
 router.get('/workers/:id', adminController.getWorkerById);
 router.get('/bookings/:id', adminController.getBookingById);
 router.patch('/reports/:id', adminController.updateReportStatus);
+router.post('/broadcast', adminController.sendBroadcast);
 
 // Settings
 router.get('/settings', adminController.getSettings);

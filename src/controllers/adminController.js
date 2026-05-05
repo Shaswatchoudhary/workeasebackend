@@ -302,3 +302,75 @@ exports.getAdminProfile = async (req, res, next) => {
     next(error);
   }
 };
+// @desc    Send broadcast notification to all workers/users
+// @route   POST /api/admin/broadcast
+exports.sendBroadcast = async (req, res, next) => {
+  try {
+    const { title, message, target } = req.body;
+    
+    if (!db) {
+      return res.status(500).json({ success: false, message: 'Firebase Admin not initialized' });
+    }
+
+    let tokens = [];
+
+    // 1. Fetch tokens from Firestore 'users'
+    if (target === 'all' || target === 'users') {
+      const usersSnapshot = await db.collection('users').get();
+      usersSnapshot.forEach(doc => {
+        const data = doc.data();
+        if (data.fcmToken) tokens.push(data.fcmToken);
+      });
+    }
+
+    // 2. Fetch tokens from Firestore 'workers'
+    if (target === 'all' || target === 'workers') {
+      const workersSnapshot = await db.collection('workers').get();
+      workersSnapshot.forEach(doc => {
+        const data = doc.data();
+        if (data.fcmToken) tokens.push(data.fcmToken);
+      });
+    }
+
+    // 3. Cleanup tokens (unique & valid)
+    const uniqueTokens = [...new Set(tokens)].filter(t => t && t.length > 10);
+
+    if (uniqueTokens.length === 0) {
+      return res.status(200).json({ 
+        success: true, 
+        message: 'No active device tokens found to send to.',
+        count: 0 
+      });
+    }
+
+    // 4. Send Multicast via Firebase
+    const multicastMessage = {
+      notification: { title, body: message },
+      data: { 
+        type: 'broadcast',
+        sender: 'Workies Admin',
+        sentAt: new Date().toISOString()
+      },
+      tokens: uniqueTokens,
+      android: {
+        priority: 'high',
+        notification: { channelId: 'default' }
+      }
+    };
+
+    const response = await admin.messaging().sendEachForMulticast(multicastMessage);
+
+    res.status(200).json({
+      success: true,
+      message: `Broadcast sent! Successfully delivered to ${response.successCount} devices.`,
+      details: {
+        total: uniqueTokens.length,
+        success: response.successCount,
+        failure: response.failureCount
+      }
+    });
+  } catch (error) {
+    console.error('[BroadcastError]', error);
+    next(error);
+  }
+};
